@@ -498,7 +498,13 @@ do
 	if [ "$PCAP_ENABLED" == "yes" ] && [ -z "$SKIP_PCAP" ]; then
         	TODAY=$(date "+%Y-%m-%d")      #-u option sets TZ to GMT
 
-		if [ "$NAS_DIR" != "" ]; then
+		if [ ! -z "$NAS_DIR" ]; then
+			if [ ! -d "$NAS_DIR" ]; then
+				mkdir -p $NAS_DIR
+				chown $SENSOR_USER:$SENSOR_GROUP $NAS_DIR
+				chmod 775 $NAS_DIR
+			fi
+
 			if [ ! -d "$NAS_DIR$TODAY" ]; then
 				mkdir -p $NAS_DIR$TODAY
 				chown $SENSOR_USER:$SENSOR_GROUP $NAS_DIR$TODAY
@@ -520,30 +526,26 @@ do
 					rm -r $entry
 					break
 				done
+
 				FREE_DISKSPACE=$(df $NAS_DIR | awk -F' ' '/volume/{print $4}')
+
 			done
 		fi
 
 		# Did the user supply a BPF?
-	        if [ -s /etc/nsm/$SENSOR/bpf-pcap.conf ]; then
-	                # User supplied a BPF, so we need to convert it
-	                BPF=`grep -v "^#" /etc/nsm/$SENSOR/bpf-pcap.conf`
-	                tcpdump -i $SENSOR_INTERFACE_SHORT -dd $BPF > /etc/nsm/$SENSOR/bpf-pcap.ops 2>/dev/null
-	                BPF_OPTION="--filter /etc/nsm/$SENSOR/bpf-pcap.ops"
-	        else
-	                BPF_OPTION=""
-	        fi
+		if [ -s /etc/nsm/$SENSOR/bpf-pcap.conf ]; then
+				# User supplied a BPF, so we need to convert it
+				BPF=`grep -v "^#" /etc/nsm/$SENSOR/bpf-pcap.conf`
+				tcpdump -i $SENSOR_INTERFACE_SHORT -dd $BPF > /etc/nsm/$SENSOR/bpf-pcap.ops 2>/dev/null
+				BPF_OPTION="--filter /etc/nsm/$SENSOR/bpf-pcap.ops"
+		else
+				BPF_OPTION=""
+		fi
 
-		TEMP_SEC=$(date +"%S")
-		while [ $TEMP_SEC -ne 0 ];
-		do
-			TEMP_SEC=$(date +"%S")
-		done
-
-		if [ "$NAS_DIR" != "" ]; then
-			$ACTION_PCAP "tcpdump" "-G 60 -i $SENSOR_INTERFACE_SHORT -n -q -w '$NAS_DIR$TODAY/%Y%m%d-%H%M%S.pcap'" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
+		if [ ! -z "$NAS_DIR" ]; then
+			$ACTION_PCAP "tcpdump" "-G 60 -i $SENSOR_INTERFACE_SHORT -n -q -w $NAS_DIR$TODAY/'%Y%m%d-%H%M%S.pcap'" "$PROCESS_PID_DIR/$SENSOR/pktdump.pid" "$PROCESS_LOG_DIR/$SENSOR/pktdump.log" "pktdump (full packet data)"
 		else 
-			$ACTION_PCAP "netsniff-ng" "--no-hwtimestamp -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval 1GiB $PCAP_OPTIONS $BPF_OPTIONS" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
+			$ACTION_PCAP "netsniff-ng" "--no-hwtimestamp -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
 		fi
 	fi
 
