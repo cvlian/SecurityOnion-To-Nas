@@ -131,7 +131,12 @@ echo "$NAS_DIR	$SHARED_DIR	nfs	defaults,nofail	0	0" >> /etc/fstab
 ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 # update packet sensor scripts
-cp nsm_sensor_ps* $NSM_GENERAL_SBIN_DIR
+for f in nsm_sensor_ps*
+do
+	chmod 755 $f
+	chwon root:root $f
+	cp $f $NSM_GENERAL_SBIN_DIR
+done
 
 nsm_sensor_ps-start --sensor-name=$SENSOR_NAME --nas-dir=$SHARED_DIR
 
