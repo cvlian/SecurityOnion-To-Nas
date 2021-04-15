@@ -23,7 +23,7 @@ print_usage()
 	echo "Options:"
 	echo "    --sensor-name=<name>             Define specific sensor <name> to process"
 	echo "    --nas-dir=<name>                 Address of NAS shared directory"
-    echo "    --shared-dir=<name>              Directory where NAS should be mounted"
+	echo "    --shared-dir=<name>              Directory where NAS should be mounted"
 	echo
 	echo "    --help                           Same as -h"
 	echo 
@@ -39,7 +39,8 @@ while [ "$#" -gt 0 ]
 do
 	case $1 in
 		"-h" | "--help")
-			SHOW_HELP_ONLY=yes
+			print_usage
+			exit 1
 			;;	
 		--sensor-name*)
 			SENSOR_NAME="$SENSOR_NAME $(echo $1 | cut -d "=" -f 2)"
