@@ -61,22 +61,19 @@ do
 done
 
 if [ -z "$SENSOR_NAME" ]; then
-	echo "Missing '--sensor-name' option!!"
-	echo
+	echo_error_msg 0  "Missing '--sensor-name' option!!"
 	print_usage
 	exit 1
 fi
 
 if [ -z "$NAS_DIR" ]; then
-	echo "Missing '--nas-dir' option!!"
-        echo
+	echo_error_msg 0  "Missing '--nas-dir' option!!"
         print_usage
 	exit 1
 fi
 
 if [ -z "$SHARED_DIR" ]; then
-	echo "Missing '--shared-dir' option!!"
-        echo
+	echo_error_msg 0  "Missing '--shared-dir' option!!"
         print_usage
 	exit 1
 fi
@@ -128,7 +125,7 @@ fi
 mount -t nfs $NAS_DIR $SHARED_DIR &> /dev/null
 
 if [ $? -eq 0 ]; then
-	echo "Could not access $NAS_DIR, check the nfs permission"
+	echo_error_msg 0 "Could not access $NAS_DIR, check the nfs permission"
 	exit 1
 fi
 
