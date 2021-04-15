@@ -22,8 +22,8 @@ print_usage()
 	echo
 	echo "Options:"
 	echo "    --sensor-name=<name>             Define specific sensor <name> to process"
-	echo "    --nas-dir=<name>                 Address of NAS shared directory"
-	echo "    --shared-dir=<name>              Directory where NAS should be mounted"
+	echo "    --nas-dir=<name>                 Mount path of shared folder"
+	echo "    --shared-dir=<name>              Mount point on NFS client"
 	echo
 	echo "    --help                           Same as -h"
 	echo 
