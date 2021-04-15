@@ -62,16 +62,22 @@ done
 
 if [ -z "$SENSOR_NAME" ]; then
 	echo "Missing '--sensor-name' option!!"
+	echo
+	print_usage
 	exit 1
 fi
 
 if [ -z "$NAS_DIR" ]; then
 	echo "Missing '--nas-dir' option!!"
+        echo
+        print_usage
 	exit 1
 fi
 
 if [ -z "$SHARED_DIR" ]; then
 	echo "Missing '--shared-dir' option!!"
+        echo
+        print_usage
 	exit 1
 fi
 
