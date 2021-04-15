@@ -4,7 +4,7 @@ Security Onion sciprts for saving pcap files in a NAS storage
 
 ## How to run?
 
-To install the prerequisite, simply type in the shell prompt the following:
+To activate the packet collecting process, simply type in the shell prompt the following:
 
 ```
 $ git clone https://github.com/cvlian/SecurityOnion-To-Nas/
