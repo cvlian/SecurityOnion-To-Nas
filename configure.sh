@@ -107,7 +107,7 @@ apt-get update
 
 dpkg -s nfs-common &> /dev/null
 
-if [ $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
 	apt-get install nfs-common
 fi
 
@@ -124,7 +124,7 @@ fi
 
 mount -t nfs $NAS_DIR $SHARED_DIR &> /dev/null
 
-if [ $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
 	echo_error_msg 0 "Could not access $NAS_DIR, check the nfs permission"
 	exit 1
 fi
@@ -138,9 +138,9 @@ ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 for f in nsm_sensor_ps*
 do
 	chmod 755 $f
-	chwon root:root $f
+	chown root:root $f
 	cp $f $NSM_GENERAL_SBIN_DIR
 done
 
-nsm_sensor_ps-start --sensor-name=$SENSOR_NAME --nas-dir=$SHARED_DIR
+nsm_sensor_ps-start --sensor-name="$SENSOR_NAME" --nas-dir="$SHARED_DIR"
 
