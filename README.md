@@ -8,6 +8,7 @@ To install the prerequisite, simply type in the shell prompt the following:
 
 ```
 $ git clone https://github.com/cvlian/SecurityOnion-To-Nas/
+$ cd SecurityOnion-To-Nas
 $ sudo ./configure.sh --sensor-name=[sensor interface name] --nas-dir=[Synology NAS IP address]:[mount path of shared folder] --shared-dir=[mount point on NFS client]
 ```
 
