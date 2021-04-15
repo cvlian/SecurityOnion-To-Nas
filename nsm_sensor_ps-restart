@@ -542,6 +542,12 @@ do
 				BPF_OPTION=""
 		fi
 
+		TEMP_SEC=$(date +"%S")
+		while [ $TEMP_SEC -ne 0 ];
+		do
+			TEMP_SEC=$(date +"%S")
+		done
+
 		if [ ! -z "$NAS_DIR" ]; then
 			$ACTION_PCAP "tcpdump" "-G 60 -i $SENSOR_INTERFACE_SHORT -n -q -w $NAS_DIR$TODAY/'%Y%m%d-%H%M%S.pcap'" "$PROCESS_PID_DIR/$SENSOR/pktdump.pid" "$PROCESS_LOG_DIR/$SENSOR/pktdump.log" "pktdump (full packet data)"
 		else 
