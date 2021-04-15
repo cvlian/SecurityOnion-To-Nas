@@ -125,8 +125,12 @@ if [ $? -eq 0 ]; then
 	exit 1
 fi
 
+echo "$NAS_DIR	$SHARED_DIR	nfs	defaults,nofail	0	0" >> /etc/fstab
+
+# change timezone
 ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
+# update packet sensor scripts
 cp nsm_sensor_ps* $NSM_GENERAL_SBIN_DIR
 
 nsm_sensor_ps-start --sensor-name=$SENSOR_NAME --nas-dir=$SHARED_DIR
